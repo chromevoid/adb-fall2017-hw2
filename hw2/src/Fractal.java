@@ -9,8 +9,9 @@ public class Fractal {
     public static void main(String[] args) {
         List<Integer> outvec1 = gen(0.5, 8);
         System.out.println(outvec1);
-        List<Integer> outvec2 = gen(0.3, 70000);
+        List<Integer> outvec2 = gen(0.3, 70002);
         System.out.println(outvec2);
+        System.out.println(outvec2.size());
     }
 
     static public List<Integer> gen(double fractal, int N) {
