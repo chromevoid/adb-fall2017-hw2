@@ -17,8 +17,13 @@ FROM trade
 WINDOW w AS (PARTITION BY stock ORDER BY date ROWS BETWEEN 9 PRECEDING AND CURRENT ROW);
 
 # query 3
+CREATE TABLE temp1 AS
+SELECT stock, sum(price*quantity) OVER w2 AS value, sum(quantity) OVER w2 AS amount
+FROM trade
+WINDOW w2 AS (PARTITION BY stock ORDER BY date ROWS BETWEEN 9 PRECEDING AND CURRENT ROW);
 
-
+SELECT stock, round(value / amount::numeric,4) AS weighted_average 
+FROM temp1;
 
 
 # query 4
