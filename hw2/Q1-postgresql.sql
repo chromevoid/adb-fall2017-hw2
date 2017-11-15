@@ -32,7 +32,37 @@ SELECT stock, round(value / amount::numeric,4) AS weighted_average FROM temp2;
 
 
 # query 4
-SELECT stock, max(rdif) AS maximum_positive_price FROM (SELECT stock,date, price - min(price) OVER (PARTITION BY stock ORDER BY date ROWS UNBOUNDED PRECEDING) AS rdif FROM trade ) AS temp
+SELECT stock, max(rdif) AS maximum_positive_price 
+FROM (
+	SELECT stock,date, price - min(price) OVER (PARTITION BY stock ORDER BY date ROWS UNBOUNDED PRECEDING) AS rdif 
+	FROM trade 
+) AS temp
 GROUP BY stock;
 
 # \q to quit
+
+
+# Timing
+22.073
+70145.909
+# add = 70167.982
+
+12390.731
+360.527
+# add = 12751.258
+# result = 82919.24 = 82.91924s
+
+68885.785
+# result = 139053.767 = 139.053767s
+
+60340.561
+20651.621
+# add = 80992.182
+# result = 151160.164 = 151.160164s
+
+36903.303
+# result = 107071.285 = 107.071285
+
+
+
+
