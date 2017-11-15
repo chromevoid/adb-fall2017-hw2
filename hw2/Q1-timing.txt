@@ -1,0 +1,20 @@
+Aquery:
+real  0m10.635s
+user  0m6.917s
+sys 0m1.550s
+
+real  0m16.975s
+user  0m13.973s
+sys 0m2.968s
+
+real  0m17.550s
+user  0m14.138s
+sys 0m3.366s
+
+real  0m16.261s
+user  0m12.301s
+sys 0m3.720s
+
+Postgresql:
+module load postgresql-9.6.1
+pg_ctl -D /home/mq438/pgsql/data stop

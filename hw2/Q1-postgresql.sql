@@ -1,14 +1,20 @@
+#psql
+module load postgresql-9.6.1
+initdb -D /home/mq438/pgsql/data -U mq438
+pg_ctl -D /home/mq438/pgsql/data -l logfile -o "-F -p 2000" start
+createdb my_db -p 2000
+psql my_db -p 2000
+pg_ctl -D /home/mq438/pgsql/data stop
+
+\timing
 CREATE TABLE trade (stock INT NOT NULL, date INT NOT NULL, quantity INT NOT NULL, price INT NOT NULL, PRIMARY KEY (date));
 # psql load data
-COPY trade(stock, date, quantity, price) FROM '/home/mq438/trade.csv' DELIMITER ',';
-
-
+COPY trade(stock, date, quantity, price) FROM '/home/mq438/trade1.csv' DELIMITER ',';
 
 # query 1
-CREATE TABLE temp AS 
-SELECT stock, sum(price*quantity) AS value, sum(quantity) AS amount FROM trade GROUP BY stock;
+CREATE TABLE temp1 AS SELECT stock, sum(price*quantity) AS value, sum(quantity) AS amount FROM trade GROUP BY stock;
 
-SELECT stock, round(value/amount::numeric, 4) AS weighted_price FROM temp ORDER BY stock;
+SELECT stock, round(value/amount::numeric, 4) AS weighted_price FROM temp1 ORDER BY stock;
 
 # query 2
 
@@ -17,15 +23,16 @@ FROM trade
 WINDOW w AS (PARTITION BY stock ORDER BY date ROWS BETWEEN 9 PRECEDING AND CURRENT ROW);
 
 # query 3
-CREATE TABLE temp1 AS
+CREATE TABLE temp2 AS
 SELECT stock, sum(price*quantity) OVER w2 AS value, sum(quantity) OVER w2 AS amount
 FROM trade
 WINDOW w2 AS (PARTITION BY stock ORDER BY date ROWS BETWEEN 9 PRECEDING AND CURRENT ROW);
 
-SELECT stock, round(value / amount::numeric,4) AS weighted_average 
-FROM temp1;
+SELECT stock, round(value / amount::numeric,4) AS weighted_average FROM temp2;
 
 
 # query 4
 SELECT stock, max(rdif) AS maximum_positive_price FROM (SELECT stock,date, price - min(price) OVER (PARTITION BY stock ORDER BY date ROWS UNBOUNDED PRECEDING) AS rdif FROM trade ) AS temp
 GROUP BY stock;
+
+# \q to quit
