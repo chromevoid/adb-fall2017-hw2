@@ -55,7 +55,7 @@ CREATE TABLE u1 AS
   SELECT t1.person as p1, t1.person2 as p2, ULike.artist as a, 1 as dummy
     FROM t1 INNER JOIN ULike USING person
 
-CREATE TABLE u2 AS SELECT person AS p2, artist AS a, 1 as dummy FROM TLike
+CREATE TABLE u2 AS SELECT person AS p2, artist AS a, 1 as dummy FROM ULike
 
 CREATE TABLE j1 AS SELECT u1.p1 AS person1, u1.p2 AS person2, u1.dummy AS dum1, u2.dummy AS dum2, u1.a AS artist FROM u1 FULL OUTER JOIN u2 USING (p2, a)
 
