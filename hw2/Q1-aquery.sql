@@ -47,6 +47,6 @@ SELECT stock, max(price - mins(price)) AS maximum_positive_price FROM trade_star
 
 
 ### type error when trying to write to output file, use show command in q instead
-INTO OUTFILE "weightedPrice.txt" FIELDS TERMINATED BY ","
+## INTO OUTFILE "weightedPrice.txt" FIELDS TERMINATED BY ","
 
 

@@ -39,3 +39,4 @@ pg_ctl -D /home/mq438/pgsql/data stop
 
 36903.303
 # result = 107071.285 = 107.071285
+
