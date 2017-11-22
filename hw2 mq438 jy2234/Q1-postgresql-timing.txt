@@ -1,0 +1,137 @@
+Script started on Wed 15 Nov 2017 03:20:25 PM EST
+[?1034hmq438@linserv1[~]$ psql my_db -p 2000
+psql (8.4.20, server 9.6.1)
+WARNING: psql version 8.4, server version 9.6.
+         Some psql features might not work.
+Type "help" for help.
+
+[?1034hmy_db=# \timing
+Timing is on.
+my_db=# CREATE TABLE trade (stock INT NOT NULL, date INT NOT NULL, quantity INT NOT NULL, price INT  
+NOT NULL, PRIMARY KEY (date));
+CREATE TABLE
+Time: 22.073 ms
+my_db=# COPY trade(stock, date, quantity, price) FROM '/home/mq438/trade1.csv' DELIMITER ',';
+COPY 10000000
+Time: 70145.909 ms
+my_db=# CREATE TABLE temp1 AS SELECT stock, sum(price*quantity) AS value, sum(quantity) AS amount FR 
+OM trade GROUP BY stock;
+SELECT 70002
+Time: 12390.731 ms
+my_db=# SELECT stock, round(value/amount::numeric, 4) AS weighted_price FROM temp1 ORDER BY stock;
+ stock | weighted_price 
+-------+----------------
+     1 |       360.2056
+     2 |       434.6216
+     3 |       343.0243
+     4 |        73.1353
+     5 |       257.3102
+     6 |        59.9140
+     7 |       476.1694
+     8 |       290.8373
+     9 |       309.7756
+    10 |       185.4830
+    11 |       344.4619
+    12 |       409.1809
+    13 |       252.3577
+    14 |       285.6095
+    15 |       159.7572
+    16 |        79.7143
+    17 |       383.5932
+    18 |       259.6981
+    19 |       240.8131
+    20 |       463.8814
+    21 |        92.0300
+[7m--More--[27m
+[KTime: 360.527 ms
+my_db=# SELECT stock, avg(price) OVER w AS average FROM trade WINDOW w AS (PARTITION BY stock ORDER  
+BY date ROWS BETWEEN 9 PRECEDING AND CURRENT ROW);
+ stock |       average        
+-------+----------------------
+     1 | 373.0000000000000000
+     1 | 371.0000000000000000
+     1 | 370.6666666666666667
+     1 | 369.2500000000000000
+     1 | 368.2000000000000000
+     1 | 366.8333333333333333
+     1 | 366.0000000000000000
+     1 | 365.8750000000000000
+     1 | 366.0000000000000000
+     1 | 366.5000000000000000
+     1 | 366.2000000000000000
+     1 | 366.8000000000000000
+     1 | 367.1000000000000000
+     1 | 367.5000000000000000
+     1 | 368.5000000000000000
+     1 | 370.1000000000000000
+     1 | 372.1000000000000000
+     1 | 373.8000000000000000
+     1 | 375.8000000000000000
+     1 | 377.8000000000000000
+     1 | 379.4000000000000000
+[7m--More--[27m
+[KqTime: 68885.785 ms
+my_db=# CREATE TABLE temp2 AS SELECT stock, sum(price*quantity) OVER w2 AS value, sum(quantity) OVER 
+ w2 AS amount FROM trade WINDOW w2 AS (PARTITION BY stock ORDER BY date ROWS BETWEEN 9 PRECEDING AND 
+ CURRENT ROW);
+SELECT 10000000
+Time: 60340.561 ms
+my_db=# SELECT stock, round(value / amount::numeric,4) AS weighted_average FROM temp2;
+ stock | weighted_average 
+-------+------------------
+     1 |         373.0000
+     1 |         369.9975
+     1 |         369.9982
+     1 |         369.5371
+     1 |         367.9768
+     1 |         366.8113
+     1 |         366.1807
+     1 |         365.9646
+     1 |         365.9924
+     1 |         366.7185
+     1 |         366.4540
+     1 |         366.5261
+     1 |         366.8221
+     1 |         367.0098
+     1 |         368.0947
+     1 |         370.3601
+     1 |         373.0148
+     1 |         375.4283
+     1 |         377.5501
+     1 |         379.9574
+     1 |         380.6009
+[7m--More--[27m
+[KTime: 20651.621 ms
+my_db=# SELECT stock, max(rdif) AS maximum_positive_price FROM (SELECT stock,date, price - min(price 
+) OVER (PARTITION BY stock ORDER BY date ROWS UNBOUNDED PRECEDING) AS rdif FROM trade ) AS temp
+my_db-# GROUP BY stock;
+ stock | maximum_positive_price 
+-------+------------------------
+     1 |                     31
+     2 |                     23
+     3 |                     68
+     4 |                     56
+     5 |                     18
+     6 |                     13
+     7 |                     18
+     8 |                     33
+     9 |                     16
+    10 |                     22
+    11 |                     64
+    12 |                     59
+    13 |                     23
+    14 |                     70
+    15 |                     81
+    16 |                     15
+    17 |                     27
+    18 |                     72
+    19 |                     31
+    20 |                     18
+    21 |                     29
+[7m--More--[27m
+[KTime: 36903.303 ms
+my_db=# \q
+mq438@linserv1[~]$ ei[Kxit
+exit
+
+Script done on Wed 15 Nov 2017 03:29:11 PM EST
