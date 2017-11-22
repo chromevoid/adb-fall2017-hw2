@@ -1,0 +1,4 @@
+CREATE TABLE trade_start(stock INT, date INT, quantity INT, price INT)
+LOAD DATA INFILE "trade.csv" INTO TABLE trade_start FIELDS TERMINATED BY ","
+CREATE TABLE result AS
+SELECT stock, avgs(10,price) AS average, date FROM trade_start ASSUMING ASC date GROUP BY stock

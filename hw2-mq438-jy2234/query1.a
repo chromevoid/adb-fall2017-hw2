@@ -1,0 +1,9 @@
+CREATE TABLE trade_start(stock INT, date INT, quantity INT, price INT)
+LOAD DATA INFILE "trade.csv" INTO TABLE trade_start FIELDS TERMINATED BY ","
+
+CREATE TABLE temp AS 
+SELECT stock, sum(price*quantity) AS value, sum(quantity) AS amount FROM trade_start GROUP BY stock
+
+CREATE TABLE result AS
+SELECT stock, value/amount AS weighted_price FROM temp ASSUMING ASC stock 
+
