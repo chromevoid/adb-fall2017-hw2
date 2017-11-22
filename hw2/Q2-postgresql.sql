@@ -71,3 +71,64 @@ SELECT price, stock from tradeIndex where price >=300 and stock >= 40000;
 SELECT price, stock from tradeCluster where price >=300 and stock >= 40000;
 ### Time: 4711.858 ms
 
+
+
+
+select stock from trade where price >= 300;
+Time: 4629.947 ms
+select stock from tradeIndex where price >= 300;
+Time: 5563.865 ms
+
+select price from trade where stock >= 40000;
+Time: 4325.189 ms
+
+
+
+
+
+
+===== 
+
+select stock from trade where price < 300;
+Time: 5652.495 ms
+
+select stock from trade where price > 300;
+Time: 5056.970 ms
+
+select stock from tradeIndex where price < 300;
+Time: 6336.941 ms
+
+select stock from tradeIndex where price > 300;
+Time: 4829.190 ms
+
+select price from trade where stock < 5353;
+Time: 1656.320 ms
+
+select price from tradeIndex where stock < 5353;
+Time: 4.576 ms
+
+select price from trade where price < 300;
+Time: 1918.216 ms
+
+select price from tradeIndex where price < 300;
+Time: 643.689 ms
+
+select stock from trade where stock < 5353;
+Time: 1712.494 ms
+
+select stock from tradeIndex where stock < 5353;
+Time: 2.648 ms
+
+
+=====
+
+CREATE INDEX idx_stock_price ON trade(stock, price);
+SELECT price FROM trade WHERE stock=5353;
+DROP INDEX idx_stock_price;
+
+CREATE INDEX idx_price_stock ON trade(price, stock);
+SELECT price FROM trade WHERE stock=5353;
+DROP INDEX idx_price_stock;
+
+
+

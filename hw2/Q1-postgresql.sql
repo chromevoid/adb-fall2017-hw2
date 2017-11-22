@@ -4,7 +4,14 @@ initdb -D /home/mq438/pgsql/data -U mq438
 pg_ctl -D /home/mq438/pgsql/data -l logfile -o "-F -p 2000" start
 createdb my_db -p 2000
 psql my_db -p 2000
+createdb hw_db -p 2000
+dropdb hw_db -p 2000
+psql hw_db -p 2000
 pg_ctl -D /home/mq438/pgsql/data stop
+
+
+psql -s my_db -f Q1.sql
+
 
 \timing
 CREATE TABLE trade (stock INT NOT NULL, date INT NOT NULL, quantity INT NOT NULL, price INT NOT NULL, PRIMARY KEY (date));

@@ -42,11 +42,10 @@ CREATE TABLE result AS
   SELECT u1__p1_u2__p1 as p1, u1__p2_u2__p2 as p2, u1__a_u2__a as a
     FROM u WHERE u1__dummy != 1 AND u2__dummy = 1
 
-// java -jar aquery.jar -a 1 -s -c -o query-q3-jy.q query-q3-jy.a
-// SELECT * FROM result INTO OUTFILE "result1.txt" FIELDS TERMINATED BY ","
-// SELECT * FROM result INTO OUTFILE "result2.txt" FIELDS TERMINATED BY ","
-// java -jar aquery.jar -a 1 -s -c -o query11.q query11.a
-// java -jar aquery.jar -a 1 -s -c -o query12.q query12.a
+-- SELECT * FROM result INTO OUTFILE "result1.txt" FIELDS TERMINATED BY ","
+-- SELECT * FROM result INTO OUTFILE "result2.txt" FIELDS TERMINATED BY ","
+-- java -jar aquery.jar -a 1 -s -c -o query3-1.q query3-1.a
+-- java -jar aquery.jar -a 1 -s -c -o query3-2.q query3-2.a
 
 
 ===== ===== ===== =====
@@ -85,15 +84,3 @@ CREATE TABLE u AS
 CREATE TABLE result AS
   SELECT u1__p1_u2__p1 as p1, u1__p2_u2__p2 as p2, u1__a_u2__a as a
     FROM u WHERE u1__dummy != 1 AND u2__dummy = 1
-
-===== ===== ===== =====
-
-
-java -jar aquery.jar -a 1 -s -c -o q3-1.q q3-1.a
-java -jar aquery.jar -a 1 -s -c -o q3-2.q q3-2.a
-
-
-
-
-
-
